@@ -1,0 +1,45 @@
+title Change Email after Verify (OTP-code version)
+
+participant User Agent as u
+participant MyAccount as myacc
+participant Digital API as d
+participant Auth0 \n Authentication API as a0
+
+## step 1
+u -> myacc: Click Change email
+myacc -> +d: POST /step1 { bearer: access_token }
+d->+a0: GET /userinfo { bearer: access_token }
+a0-->-d: profile {email}
+d -> +a0:POST /passwordless/start \n{client_id:digital, client_secret, connection=email,\n email:email, send:code, Header:auth0-forwarded-for}
+a0 --> -d:200:Success
+d --> -myacc: 200:Success sent code
+
+u -> myacc:Enters Verification code & new Email { otp, new_email }
+
+## step 2
+myacc -> +d: POST /step2 { bearer: access_token, otp, new_email}
+d->+a0: GET /userinfo { bearer: access_token }
+a0-->-d: profile {email}
+d->+a0: GET /api/v2/users-by-email { new_email }
+a0 --> d: list of users
+d -> d: new_email not taken
+d -> +a0:POST /oauth/token \n{grant_type=otp, client_id, client_secret, \nrealm:email, username:email, otp:code, Header:auth0-forwarded-for}
+a0 --> -d:200:Success {pwdless_access_token}
+d -> +a0:POST /passwordless/start \n{client_id, client_secret, connection=email,\n email:new_email, send:code, Header:auth0-forwarded-for}
+a0 --> -d:200:Success
+d --> -myacc: 200:Success sent code { pwdless_access_token }
+u -> myacc:Enters Verification code in new mailbox { code }
+
+## step 3
+myacc -> +d: POST /step3 { bearer: access_token, new_email, otp, pwdless_access_token }
+d -> +a0:POST /oauth/token \n{grant_type=otp, client_id, client_secret, \nrealm:email, username:new_email, otp:code, Header:auth0-forwarded-for}
+a0 --> -d: { id_token, access_token }
+d -> d: pwdless_access_token.sub is email| ?
+d -> d: bearer.access_token.email == pwdless_access_token.email ?
+d -> a0: DELETE /api/v2/users/{id_token.sub}
+d -> a0: DELETE /api/v2/users/{pwdless_access_token.sub}
+d -> a0: PATCH /api/v2/users/{ bearer.access_token.sub} {email:new_email, verified:true}
+d --> -myacc: 200: Email updated successfully
+myacc -> u: 302 /authorize { connection=DB }
+
+

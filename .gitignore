@@ -1,0 +1,5 @@
+vendor
+.idea
+*.lock
+.env
+auth_config.json

@@ -1,0 +1,21 @@
+{
+    "name": "change email otp verify",
+    "description": "change email only after OTP verification of current and new email address",
+    "require": {
+         "vlucas/phpdotenv": "^3.6.0",
+         "auth0/auth0-PHP": "dev-master",
+         "ext-json": "*"
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/abbaspour/auth0-PHP.git"
+        }
+    ],
+    "authors": [
+        {
+            "name": "Amin Abbaspour",
+            "email": "amin@auth0.com"
+        }
+    ]
+}
