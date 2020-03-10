@@ -15,6 +15,39 @@ $ composer install
 $ php -S localhost:3000 
 ```
 
+## Client Creation
+This sample requires two clients
+1. SPA client for front-end application. `client_id` goes into `auth_config.json` file
+2. Regular Web Application client for back-end API. `client_id` and `client_secret` goes into `.env` file
+
+### SPA Client
+- Type: SPA
+- Grant(s): Authorization Code
+- Connection(s): Database
+- Allowed Callback and Logout URLs: `http://localhost:3000`
+
+![SPA client](screenshots/setup-spa-client.png)
+
+### API Client
+- Type: RWA
+- Grant(s): Passwordless OTP, Client Credentials
+- Connection(s): Database, *Passwordless Email*
+- API & scopes: *Management API* with following scopes
+    - `read:users`
+    - `update:users`
+    - `delete:users`
+
+##### Application  
+![API client - App](screenshots/setup-api-client.png)
+
+##### Grants
+![API client - Grants](screenshots/setup-api-grants.png)
+
+##### Connection
+![API client - Connection](screenshots/setup-api-connection.png)
+  
+##### Scopes
+![API client - Scopes](screenshots/setup-api-scopes.png)
 
 ## Steps
 
