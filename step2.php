@@ -135,5 +135,8 @@ try {
     exit();
 }
 
-echo json_encode(array("success" => True, "message" => 'email verified', 'otp_access_token' => $result['access_token']));
+// Note: in production use secure=>true
+setcookie('otp_access_token', $result['access_token'],
+    [ 'expires' => time()+3600, 'path' => '/', 'secure' => false, 'httpOnly' => true, 'samesite' => 'Strict']);
+echo json_encode(array("success" => True, "message" => 'email verified'));
 exit();

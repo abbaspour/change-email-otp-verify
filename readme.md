@@ -1,6 +1,18 @@
 ## Sequence Diagram
 ![Sequence Diagram](screenshots/sequence-diagram.png)
 
+#### Why this approach?
+Change email is a high risk operation. Here are some reasoning behind this approach:
+
+1. Change email leaves a track (email) in both current and new mailbox. i.e. any temporarily change won't go unnoticed.
+2. Ownership to both mailboxes are guaranteed using OTP code, eliminating any chance of a typo
+3. OTP is generally more secure compared to the magic link. No accidental verification by virus-scanner or other browser plugins       
+4. UX optionally designed as SPA. Easy to add to any existing MyAccount portal 
+
+```
+Notes: Not suitable if you already using Passwordless for normal login 
+```
+
 ## Setup
 copy and populate 
 1. `env-sample` => `.env`

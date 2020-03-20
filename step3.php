@@ -63,7 +63,7 @@ if(!isset($new_email)) {
     exit();
 }
 
-$otp_access_token = $data["otp_access_token"];
+$otp_access_token = htmlspecialchars($_COOKIE["otp_access_token"]);
 if(!isset($otp_access_token)) {
     header('HTTP/1.0 400 Bad Request');
     echo json_encode(array("success" => False, "message" => "otp_access_token missing"));
@@ -145,7 +145,7 @@ $token_verifier = new IdTokenVerifier(
 
 try {
     $decoded_id_token = $token_verifier->verify($new_id_token);
-} catch (\Exception $e) {
+} catch (Exception $e) {
     header('HTTP/1.0 400 Bad Request');
     echo json_encode(array("success" => False, "message" => 'id_token validation failed'));
     exit();
@@ -196,6 +196,7 @@ try {
     exit();
 }
 
+setcookie('otp_access_token', '', time() - 3600);
 echo json_encode(array("success" => True, 'message' => 'email changed'));
 
 exit();

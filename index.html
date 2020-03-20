@@ -142,7 +142,6 @@
             }
           });
 
-          let otp_access_token = '';
           let new_email = '';
 
           document.getElementById('changeEmailStep2').addEventListener('click', async () => {
@@ -163,7 +162,6 @@
             if(data.success) {
               document.getElementById('step2').style.visibility = 'hidden';
               document.getElementById('step3').style.visibility = 'visible';
-              otp_access_token = data['otp_access_token'];
             } else {
               window.location.href = 'error.html?msg=' + encodeURI(data.message);
             }
@@ -172,8 +170,7 @@
           document.getElementById('changeEmailStep3').addEventListener('click', async () => {
             const body = {
               new_otp: document.getElementById('new-otp-input').value,
-              new_email: new_email,
-              otp_access_token: otp_access_token
+              new_email: new_email
             };
             const accessToken = await auth0.getTokenSilently();
             const result = await fetch('step3.php', {

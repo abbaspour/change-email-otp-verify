@@ -41,17 +41,6 @@ if(!isset($email)) {
     exit();
 }
 
-/*$data = json_decode(file_get_contents('php://input'), true);
-
-if(isset($data)) {
-    $email = $data["email"];
-    if (!isset($email)) {
-        header('HTTP/1.0 400 Bad Request');
-        echo json_encode(array("success" => False, "message" => "POST email missing"));
-        exit();
-    }
-}*/
-
 $source_ip = $_SERVER['REMOTE_ADDR'];
 
 $authParams = array(
